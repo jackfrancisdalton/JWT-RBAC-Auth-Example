@@ -11,6 +11,6 @@ services:
       dockerfile: Dockerfile.prod
     environment:
       NODE_ENV: production
-    volumes: []  # Added to ensure no volume mounts 
     ports:
       - "80:80"  # Override port mapping as we use Nginx for production
+    volumes: []  # Added to ensure no volume mounts 
