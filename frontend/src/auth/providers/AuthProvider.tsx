@@ -2,14 +2,16 @@ import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 // TODO: clean up types/interfaces and move to dedicated file
+export type Role = 'user' | 'admin';
+
 interface AuthJwtPayload extends JwtPayload {
     username: string;
-    roles: string[];
+    roles: Role[];
 }
 
 export type User = {
     email: string;
-    roles: string[];
+    roles: Role[];
 }
 
 interface UserNameAndPassword {
@@ -30,6 +32,8 @@ const AuthContext = createContext<AuthContext | undefined>(undefined);
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [token, setToken] = useState<string | null>();
   const [user, setUser] = useState<User | null>()
+
+  // TODO: Add call for authentication load 
 
   const login = async ({email, password}: UserNameAndPassword): Promise<void> => {
     try {

@@ -5,7 +5,6 @@ import { JwtPayload, User } from './auth.types';
 
 @Injectable()
 export class AuthService {
-    
     // For this example we're using in memory storage to avoid getting complicating this example with a database
     // In an actual implementation you would likley store these in a database 
     private users: User[] = [];

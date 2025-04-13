@@ -2,19 +2,29 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css'
 import UnauthenticatedPage from './auth/pages/UnauthenticatedPage'
 import AuthenticatedPage from './auth/pages/AuthenticatedPage';
+import PublicOnlyRoute from './auth/components/PublicOnlyRoute';
+import ProtectedRoute from './auth/components/ProtectedRoute';
 
 function App() {
   
-  // TODO: set up router so we navigate/re-route based on authentication state
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <UnauthenticatedPage />,   
+      element: (
+        <PublicOnlyRoute>
+          <UnauthenticatedPage />
+        </PublicOnlyRoute>
+      ),   
     },
     {
       path: '/home',
-      element: <AuthenticatedPage />
+      element: (
+        <ProtectedRoute requiredRoles={['user']}>
+          <AuthenticatedPage />
+        </ProtectedRoute>
+      )
     }
+    // TODO: add admin only page later requiredPermissions={['admin']}
   ]);
 
   return (
