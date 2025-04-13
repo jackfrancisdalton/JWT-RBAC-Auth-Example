@@ -28,7 +28,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const login = async ({email, password}: UserNameAndPassword): Promise<void> => {
     try {
-        const res = await fetch('http://localhost:3000/api/auth/login', {
+        // TODO: move into dedicated api file
+        const res = await fetch('http://localhost:3000/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -45,7 +46,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const register = async ({email, password}: UserNameAndPassword): Promise<void> => {
     try {
-        const res = await fetch('http://localhost:3000/api/auth/register', {
+        // TODO: move into dedicated api file
+        const res = await fetch('http://localhost:3000/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
