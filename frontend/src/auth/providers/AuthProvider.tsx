@@ -1,6 +1,11 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
+const localStorageKeys = {
+    USER: 'user',
+    TOKEN: 'token'
+}
+
 // TODO: clean up types/interfaces and move to dedicated file
 export type Role = 'user' | 'admin';
 
@@ -30,10 +35,13 @@ type AuthContext = {
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [token, setToken] = useState<string | null>();
-  const [user, setUser] = useState<User | null>()
+    const [token, setToken] = useState<string | null>(() => localStorage.getItem(localStorageKeys.TOKEN));
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = localStorage.getItem(localStorageKeys.USER);
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
 
-  // TODO: Add call for authentication load 
+  // TODO: Add call for authentication load     
 
   const login = async ({email, password}: UserNameAndPassword): Promise<void> => {
     try {
@@ -46,58 +54,58 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
         const data = await res.json();
         const tokenData = jwtDecode<AuthJwtPayload>(data.token);
-
-        setToken(data.token);
-        setUser({
-            id: tokenData.sub,
-            email: tokenData.username,
-            roles: tokenData.roles
-        } as User);
+        setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
     } catch {
-        setToken(null);
-        setUser(null);
+        clearAuth();
     }
   };
 
-  const register = async ({email, password}: UserNameAndPassword): Promise<void> => {
-    try {
-        // TODO: move into dedicated api file
-        const res = await fetch('http://localhost:3000/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
-        const data = await res.json();
-        const tokenData = jwtDecode<AuthJwtPayload>(data.token);
+    const register = async ({email, password}: UserNameAndPassword): Promise<void> => {
+        try {
+            // TODO: move into dedicated api file
+            const res = await fetch('http://localhost:3000/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
 
-        setToken(data.token);
-        setUser({
-            id: tokenData.sub,
-            email: tokenData.username,
-            roles: tokenData.roles
-        } as User);
-    } catch {
+            const data = await res.json();
+            const tokenData = jwtDecode<AuthJwtPayload>(data.token);
+            setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
+        } catch {
+            clearAuth();
+        }
+    };
+
+    const logout = async (): Promise<void> => {
+        clearAuth();
+    }
+
+    const setAuth = (token: string, user: User) => {
+        setToken(token);
+        setUser(user);
+        localStorage.setItem(localStorageKeys.TOKEN, token);
+        localStorage.setItem(localStorageKeys.USER, JSON.stringify(user));
+    }
+
+    const clearAuth = () => {
         setToken(null);
         setUser(null);
+        localStorage.removeItem(localStorageKeys.TOKEN);
+        localStorage.removeItem(localStorageKeys.USER);
     }
-  };
 
-  const logout = async (): Promise<void> => {
-    setToken(null);
-    setUser(null);
-  }
-
-  return (
-    <AuthContext.Provider value={{ 
-        token, 
-        user, 
-        register, 
-        login, 
-        logout 
-    }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ 
+            token, 
+            user, 
+            register, 
+            login, 
+            logout 
+        }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export const useAuth = () => { 
