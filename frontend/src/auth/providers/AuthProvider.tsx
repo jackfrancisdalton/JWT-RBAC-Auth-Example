@@ -1,10 +1,15 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
-type User = {
-    id: string;
+// TODO: clean up types/interfaces and move to dedicated file
+interface AuthJwtPayload extends JwtPayload {
+    username: string;
+    roles: string[];
+}
+
+export type User = {
     email: string;
     roles: string[];
-    createdAt: Date;
 }
 
 interface UserNameAndPassword {
@@ -34,10 +39,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
         });
-        const data = await res.json();
 
-        setToken(data.access_token);
-        setUser(data.user);
+        const data = await res.json();
+        const tokenData = jwtDecode<AuthJwtPayload>(data.token);
+
+        setToken(data.token);
+        setUser({
+            id: tokenData.sub,
+            email: tokenData.username,
+            roles: tokenData.roles
+        } as User);
     } catch {
         setToken(null);
         setUser(null);
@@ -53,9 +64,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             body: JSON.stringify({ email, password }),
         });
         const data = await res.json();
+        const tokenData = jwtDecode<AuthJwtPayload>(data.token);
 
-        setToken(data.access_token);
-        setUser(data.user);
+        setToken(data.token);
+        setUser({
+            id: tokenData.sub,
+            email: tokenData.username,
+            roles: tokenData.roles
+        } as User);
     } catch {
         setToken(null);
         setUser(null);

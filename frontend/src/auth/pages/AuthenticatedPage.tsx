@@ -1,10 +1,16 @@
 import AuthenticationStateCard from "../components/AuthenticationStateCard";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function AuthenticatedPage() {
+    const { user } = useAuth();
+
     return (
         <div>
-            {/* TODO content */}
-            <AuthenticationStateCard></AuthenticationStateCard>
+            {user && (
+                <AuthenticationStateCard
+                    user={user}
+                ></AuthenticationStateCard>
+            )}
         </div>
-    )
+    );
 }

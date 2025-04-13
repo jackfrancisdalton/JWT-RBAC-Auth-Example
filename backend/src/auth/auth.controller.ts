@@ -12,11 +12,13 @@ export class AuthController {
 
     @Post('register')
     async register(@Body() body: AuthBody) {
-        return this.authService.register(body.email, body.password);
+        const token = this.authService.register(body.email, body.password);
+        return { token }
     }
 
     @Post('login')
     async login(@Body() body: AuthBody) {
-        return this.authService.login(body.email, body.password);
+        const token = await this.authService.login(body.email, body.password);
+        return { token };
     }
 }

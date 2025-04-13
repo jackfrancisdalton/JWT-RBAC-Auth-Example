@@ -5,11 +5,14 @@ import { JwtPayload, User } from './auth.types';
 
 @Injectable()
 export class AuthService {
+    
+    // For this example we're using in memory storage to avoid getting complicating this example with a database
+    // In an actual implementation you would likley store these in a database 
     private users: User[] = [];
 
     constructor(private jwtService: JwtService) {}
 
-    async register(email: string, password: string): Promise<User> {
+    async register(email: string, password: string): Promise<string> {
         const existing = this.users.find(user => user.email === email);
         
         if (existing)
@@ -25,7 +28,8 @@ export class AuthService {
         };
 
         this.users.push(user);
-        return user;
+
+        return this.generateJwt(user);
     }
 
     async login (email: string, password: string): Promise<string> {
