@@ -5,6 +5,7 @@ services:
     environment:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      FRONTEND_PORT: ${FRONTEND_PORT}
     ports:
       - "3000:3000"
 
@@ -12,4 +13,4 @@ services:
     build:
       context: ./frontend
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT}:5173"

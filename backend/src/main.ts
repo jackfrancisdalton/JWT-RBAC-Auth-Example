@@ -4,8 +4,16 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const frontendPort = process.env.FRONTEND_PORT ?? 80;
+
+  // Uniquely port 80 adjusts the URL to http://localhost so we cover for this case
+  const allowedOrigin = frontendPort === '80' 
+    ? 'http://localhost' 
+    : `http://localhost:${frontendPort}`;
+
+  // For simplicity in this example project we allow requests from the frontend instead of using a reverse proxy
   app.enableCors({
-    origin: 'http://localhost:5173', // TODO: update the dev and prod versions to always point to the same port (80), and have value set via env variable in docker-compose
+    origin: allowedOrigin,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
   });
