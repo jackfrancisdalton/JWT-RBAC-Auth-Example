@@ -4,12 +4,22 @@ import UnauthenticatedPage from './auth/pages/UnauthenticatedPage'
 import AuthenticatedPage from './auth/pages/AuthenticatedPage';
 import PublicOnlyRoute from './auth/components/PublicOnlyRoute';
 import ProtectedRoute from './auth/components/ProtectedRoute';
+import AuthRedirect from './auth/components/AuthRedirect';
 
 function App() {
   
   const router = createBrowserRouter([
     {
       path: '/',
+      element: (
+        <AuthRedirect 
+          authenticatedRedirectUrl="/home"
+          unauthenticatedRedirectUrl="/login"
+        />
+      ),
+    },
+    {
+      path: '/login',
       element: (
         <PublicOnlyRoute>
           <UnauthenticatedPage />
