@@ -1,5 +1,6 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { AuthApi } from '../api/auth.api';
 
 const localStorageKeys = {
     USER: 'user',
@@ -50,14 +51,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
     const login = async ({email, password}: UserNameAndPassword): Promise<void> => {
         try {
-            // TODO: move into dedicated api file
-            const res = await fetch('http://localhost:3000/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await res.json();
+            const data = await AuthApi.login(email, password);
             const tokenData = jwtDecode<AuthJwtPayload>(data.token);
             setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
         } catch {
@@ -67,14 +61,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
     const register = async ({email, password}: UserNameAndPassword): Promise<void> => {
         try {
-            // TODO: move into dedicated api file
-            const res = await fetch('http://localhost:3000/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await res.json();
+            const data = await AuthApi.register(email, password);
             const tokenData = jwtDecode<AuthJwtPayload>(data.token);
             setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
         } catch {
