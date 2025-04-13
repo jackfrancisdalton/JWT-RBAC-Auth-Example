@@ -23,8 +23,15 @@ function App() {
           <AuthenticatedPage />
         </ProtectedRoute>
       )
+    },
+    {
+      path: '/admin',
+      element: (
+        <ProtectedRoute requiredRoles={['admin']}>
+          <AuthenticatedPage />
+        </ProtectedRoute>
+      )
     }
-    // TODO: add admin only page later requiredPermissions={['admin']}
   ]);
 
   return (

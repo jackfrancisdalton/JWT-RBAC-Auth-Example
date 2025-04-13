@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Role, useAuth } from '../providers/AuthProvider';
-import { Navigate } from 'react-router-dom';
+import ThisIsBlockedPage from '../pages/ThisIsBlockedPage';
 
 type ProtectedRouteProps =  {
     requiredRoles: Role[]; 
@@ -15,8 +15,7 @@ const ProtectedRoute = ({ children, requiredRoles }: ProtectedRouteProps) => {
     }
 
     if (!user || !requiredRoles.every(role => user.roles.includes(role))) {
-        return <Navigate to="/" replace />;
-        // Note: you could return a "you cannot access this page" component depending on desired app behaviour
+        return <ThisIsBlockedPage requiredRoles={requiredRoles}></ThisIsBlockedPage>
     }
 
     return children;
