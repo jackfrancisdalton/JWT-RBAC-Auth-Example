@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 const localStorageKeys = {
@@ -35,30 +35,35 @@ type AuthContext = {
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-    const [token, setToken] = useState<string | null>(() => localStorage.getItem(localStorageKeys.TOKEN));
-    const [user, setUser] = useState<User | null>(() => {
+    // TODO: initiate state as undefined to represent a loading auth state, null will represent an unauthenticated state
+    const [token, setToken] = useState<string | null>();
+    const [user, setUser] = useState<User | null>();
+  
+    // Fetch the token and user from local storage when the component mounts so the we can initiate their state as undefined
+    useEffect(() => {
+        const storedToken = localStorage.getItem(localStorageKeys.TOKEN);
         const storedUser = localStorage.getItem(localStorageKeys.USER);
-        return storedUser ? JSON.parse(storedUser) : null;
-    });
 
-  // TODO: Add call for authentication load     
+        setToken(storedToken);
+        setUser(storedUser ? JSON.parse(storedUser) : null);
+    }, []);
 
-  const login = async ({email, password}: UserNameAndPassword): Promise<void> => {
-    try {
-        // TODO: move into dedicated api file
-        const res = await fetch('http://localhost:3000/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
+    const login = async ({email, password}: UserNameAndPassword): Promise<void> => {
+        try {
+            // TODO: move into dedicated api file
+            const res = await fetch('http://localhost:3000/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
 
-        const data = await res.json();
-        const tokenData = jwtDecode<AuthJwtPayload>(data.token);
-        setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
-    } catch {
-        clearAuth();
-    }
-  };
+            const data = await res.json();
+            const tokenData = jwtDecode<AuthJwtPayload>(data.token);
+            setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
+        } catch {
+            clearAuth();
+        }
+    };
 
     const register = async ({email, password}: UserNameAndPassword): Promise<void> => {
         try {
