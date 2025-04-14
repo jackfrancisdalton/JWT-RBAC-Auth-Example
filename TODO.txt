@@ -1,0 +1,11 @@
+# TODO:
+- add login form error message
+- add registration form error message
+- add option to select if a user is admin role in registration
+- add a display of all users in a table in the admin page 
+- add google login auth
+- add twitter login auth
+- review naming and structure in project
+- review handling of stale tokens 
+-- for example token expires and needs to be refereshed in the background without user known
+-- other example is user roles change on backend user after token has been issuch
