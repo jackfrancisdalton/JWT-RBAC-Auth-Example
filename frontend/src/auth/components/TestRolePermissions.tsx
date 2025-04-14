@@ -9,7 +9,7 @@ interface TestRolePermissionsParams {
 
 export default function TestRolePermissions({title, roles, targetUrl}: TestRolePermissionsParams) {
     const [loading, setLoading] = useState(false);
-    const [checkResult, setCheckResult] = useState<boolean | undefined>(); // initialised to unknown for when no result has been returned yet
+    const [checkResult, setCheckResult] = useState<boolean>(undefined!); // initialised to unknown for when no result has been returned yet
 
     const { token } = useAuth();
 

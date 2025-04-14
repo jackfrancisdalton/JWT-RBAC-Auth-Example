@@ -20,7 +20,7 @@ export type User = {
     roles: Role[];
 }
 
-interface UserNameAndPassword {
+interface EmailAndPassword {
     email: string;
     password: string;
 }
@@ -28,8 +28,8 @@ interface UserNameAndPassword {
 type AuthContext = {
     token?: string | null;
     user?: User | null;
-    register: (data: UserNameAndPassword) => Promise<void>;
-    login: (data: UserNameAndPassword) => Promise<void>;
+    register: (data: EmailAndPassword) => Promise<void>;
+    login: (data: EmailAndPassword) => Promise<void>;
     logout: () => Promise<void>;
 }
 
@@ -37,9 +37,9 @@ const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
     // TODO: initiate state as undefined to represent a loading auth state, null will represent an unauthenticated state
-    const [token, setToken] = useState<string | null>();
-    const [user, setUser] = useState<User | null>();
-  
+    const [token, setToken] = useState<string | null>(undefined!);
+    const [user, setUser] = useState<User | null>(undefined!);
+
     // Fetch the token and user from local storage when the component mounts so the we can initiate their state as undefined
     useEffect(() => {
         const storedToken = localStorage.getItem(localStorageKeys.TOKEN);
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setUser(storedUser ? JSON.parse(storedUser) : null);
     }, []);
 
-    const login = async ({email, password}: UserNameAndPassword): Promise<void> => {
+    const login = async ({email, password}: EmailAndPassword): Promise<void> => {
         try {
             const data = await AuthApi.login(email, password);
             const tokenData = jwtDecode<AuthJwtPayload>(data.token);
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         }
     };
 
-    const register = async ({email, password}: UserNameAndPassword): Promise<void> => {
+    const register = async ({email, password}: EmailAndPassword): Promise<void> => {
         try {
             const data = await AuthApi.register(email, password);
             const tokenData = jwtDecode<AuthJwtPayload>(data.token);
