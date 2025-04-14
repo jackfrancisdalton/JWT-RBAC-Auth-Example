@@ -1,11 +1,11 @@
 export type Role = 'user' | 'admin';
 
 export interface JwtPayload {
-    username: string;
-    sub: string;
-    roles: Role[];
-  }
-  
+    username: string; // users's email
+    sub: string; // user's id
+    roles: Role[]; // users roles
+}
+
 export interface User {
     id: string;
     email: string;

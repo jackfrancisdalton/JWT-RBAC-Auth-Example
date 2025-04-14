@@ -5,7 +5,8 @@ import { JwtPayload, User } from './auth.types';
 
 @Injectable()
 export class AuthService {
-    // For this example we're using in memory storage to avoid getting complicating this example with a database
+
+    // For this example we're using in memory storage to avoid complicating this example with a database
     // In an actual implementation you would likley store these in a database 
     private users: User[] = [];
 
@@ -46,7 +47,13 @@ export class AuthService {
     }
 
     async generateJwt(user: User): Promise<string> {
-        const payload: JwtPayload = { username: user.email, sub: user.id, roles: user.roles };
+        // Here we assign the userId to the sub property of the JWT payload as per the JWT standard
+        const payload: JwtPayload = { 
+            username: user.email, 
+            sub: user.id, 
+            roles: user.roles 
+        };
+
         return this.jwtService.sign(payload);
     }
 }
