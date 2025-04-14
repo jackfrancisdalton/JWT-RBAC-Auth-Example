@@ -16,21 +16,22 @@ export default function TestRolePermissions({title, roles, targetUrl}: TestRoleP
     const makeRequest = async () => {
         setLoading(true);
 
-        try {
-            await fetch(targetUrl, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`, // TODO: introduce middleware or effect to auto attach bearer instead of assigning
-                },
-            });
+        const response = await fetch(targetUrl, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // TODO: introduce middleware or effect to auto attach bearer instead of assigning
+            },
+        });
+
+        if (response.ok) {
             setCheckResult(true);
-        } catch {
+        } else {
             setCheckResult(false);
-        } finally {
-            setLoading(false);
         }
+        setLoading(false);
     }
+    
 
     const renderLoading = () => {
         if (loading)
@@ -41,7 +42,7 @@ export default function TestRolePermissions({title, roles, targetUrl}: TestRoleP
 
     const renderResult = () => {
         if (checkResult !== undefined && !loading)
-            return <p>result: {checkResult}</p>;
+            return <p>Result: {checkResult ? "Succeeded, you have the role!" : "Failed, you don't have the role!"}</p>;
         
         return null;
     };
