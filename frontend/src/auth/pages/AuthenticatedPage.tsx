@@ -10,6 +10,7 @@ export default function AuthenticatedPage() {
             {user && (
                 <AuthenticationStateCard user={user}></AuthenticationStateCard>
             )}
+            {/* TODO: update to pass only the sub path, not the base URL */}
             <TestRolePermissions
                 title="Test if you're an admin"
                 roles={["admin"]}

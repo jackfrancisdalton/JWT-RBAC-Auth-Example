@@ -54,8 +54,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             const data = await AuthApi.login(email, password);
             const tokenData = jwtDecode<AuthJwtPayload>(data.token);
             setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
-        } catch {
+        } catch(error) {
             clearAuth();
+            throw error;
         }
     };
 
@@ -64,8 +65,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             const data = await AuthApi.register(email, password);
             const tokenData = jwtDecode<AuthJwtPayload>(data.token);
             setAuth(data.token, { email: tokenData.username, roles: tokenData.roles });
-        } catch {
+        } catch(error) {
             clearAuth();
+            throw error;
         }
     };
 

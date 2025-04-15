@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { JwtPayload, User } from './auth.types';
+import { InvalidPasswordError, UserNotFoundError, UserWithEmailAlreadyExistsError } from './auth.errors';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
         const existing = this.users.find(user => user.email === email);
         
         if (existing)
-            throw new Error('User already exists');
+            throw new UserWithEmailAlreadyExistsError()
 
         const hash = await bcrypt.hash(password, 10);
         const user: User = { 
@@ -36,12 +37,12 @@ export class AuthService {
         const user = this.users.find(user => user.email === email);
 
         if(!user)
-            throw new Error('User not found');
+            throw new UserNotFoundError()
 
         const valid = await bcrypt.compare(password, user.password);
 
         if (!valid)
-            throw new Error('Invalid password');
+            throw new InvalidPasswordError()
 
         return this.generateJwt(user);
     }

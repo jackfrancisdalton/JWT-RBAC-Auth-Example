@@ -5,15 +5,17 @@ export default function RegistrationForm() {
   const { register } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       await register({ email, password });
-      console.log('Registration successful');
     } catch (error) {
-      console.error('Registration failed', error);
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      }
     }
   };
 
@@ -22,6 +24,7 @@ export default function RegistrationForm() {
       <input placeholder="Email" onChange={e => setEmail(e.target.value)} />
       <input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)} />
       <button>Register</button>
+      <p>{errorMessage}</p>
     </form>
   );
 }

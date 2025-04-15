@@ -1,6 +1,4 @@
 # TODO:
-- add login form error message
-- add registration form error message
 - add option to select if a user is admin role in registration
 - add a display of all users in a table in the admin page 
 - add google login auth
