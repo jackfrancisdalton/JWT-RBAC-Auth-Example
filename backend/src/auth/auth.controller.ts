@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Roles } from './roles.decorator';
 import { RolesGuard } from './roles.guard';
 import { InvalidPasswordError, UserNotFoundError, UserWithEmailAlreadyExistsError } from './auth.errors';
+import { AuthGuard } from '@nestjs/passport';
 
 interface AuthRequestBody {
     email: string;
@@ -39,7 +40,20 @@ export class AuthController {
             throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @Get('google')
+    @UseGuards(AuthGuard('google'))
+    async googleAuth() {
+        // Automatically triggers Google OAuth flow which will redirect to Google login page and then hit the authRedirect on success
+    }
 
+    @Get('google/callback')
+    @UseGuards(AuthGuard('google'))
+    async googleAuthRedirect(@Req() req) {
+        return this.authService.googleLogin(req.user);
+    }
+
+    // TODO: move these to a role check controller
     @Get('adminRoleCheck')
     @Roles('admin')
     async adminRoleCheck() {

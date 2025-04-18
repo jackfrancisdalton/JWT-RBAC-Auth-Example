@@ -1,6 +1,8 @@
 # TODO:
 - add google login auth
+- add an intercepter for error messages to limit to only relevant ones
 - add twitter login auth
+- add tailwind CSS for basic styling
 - review naming and structure in project
 - review handling of stale tokens and validation
 -- for example token expires and needs to be refereshed in the background without user known

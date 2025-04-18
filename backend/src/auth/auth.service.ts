@@ -4,6 +4,15 @@ import * as bcrypt from 'bcryptjs';
 import { JwtPayload, User } from './auth.types';
 import { InvalidPasswordError, UserNotFoundError, UserWithEmailAlreadyExistsError } from './auth.errors';
 
+
+// TODO clean up: move to a dedicated file with relevant types later
+type GoogleLoginResponse = { 
+    id: string;
+    email: string;
+    name: string;
+    // TODO:
+}
+
 @Injectable()
 export class AuthService {
 
@@ -66,6 +75,29 @@ export class AuthService {
             throw new InvalidPasswordError()
 
         return this.generateJwt(user);
+    }
+
+    async googleLogin(user: GoogleLoginResponse): Promise<{ access_token: string }> {
+        const existingUser = this.users.find(existing => existing.email === user.email);
+    
+        if (!existingUser) {
+            const newUserFromGoogle: User = { 
+                id: Date.now().toString(36) + Math.random().toString(36).slice(0, 2), 
+                email: user.email, 
+                roles: ['user'], 
+                createdAt: new Date(),
+                password: '',
+                // TODO: add "user auth provider" to the user object to prevent login via non google method
+            };
+
+            this.users.push(newUserFromGoogle);
+
+            return { 
+                access_token: await this.generateJwt(newUserFromGoogle) 
+            };
+        }
+    
+        return { access_token: await this.generateJwt(existingUser) };
     }
 
     async generateJwt(user: User): Promise<string> {

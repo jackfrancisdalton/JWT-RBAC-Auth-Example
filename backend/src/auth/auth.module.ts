@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { RolesGuard } from './roles.guard';
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { RolesGuard } from './roles.guard';
       }),
     }),
   ],
-  providers: [AuthService, JwtStrategy, RolesGuard],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, RolesGuard],
   controllers: [AuthController]
 })
 export class AuthModule {}
