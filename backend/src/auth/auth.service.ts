@@ -11,7 +11,28 @@ export class AuthService {
     // In an actual implementation you would likley store these in a database 
     private users: User[] = [];
 
-    constructor(private jwtService: JwtService) {}
+    constructor(private jwtService: JwtService) {
+        this.populateExampleUsers();
+    }
+
+    // Quick and easy way to add two example users to the in memory user list, not best practice, here for demonstration purposes
+    private async populateExampleUsers() {
+        this.users.push({ 
+            id: Date.now().toString(36) + Math.random().toString(36).slice(0, 2), 
+            email:'user@test.com', 
+            password: await bcrypt.hash('password', 10), 
+            roles: ['user'], 
+            createdAt: new Date(),
+        })
+
+        this.users.push({ 
+            id: Date.now().toString(36) + Math.random().toString(36).slice(0, 2), 
+            email:'admin@test.com', 
+            password: await bcrypt.hash('password', 10), 
+            roles: ['user', 'admin'], 
+            createdAt: new Date(),
+        })
+    }
 
     async register(email: string, password: string): Promise<string> {
         const existing = this.users.find(user => user.email === email);
