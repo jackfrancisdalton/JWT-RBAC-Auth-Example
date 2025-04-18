@@ -7,10 +7,12 @@ services:
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
       FRONTEND_PORT: ${FRONTEND_PORT}
     ports:
-      - "3000:3000"
+      - "${BACKEND_PORT}:3000"
 
   frontend:
     build:
       context: ./frontend
+    environment:
+      VITE_BACKEND_PORT: ${BACKEND_PORT} # env variables in VITE must start with VITE_
     ports:
       - "${FRONTEND_PORT}:5173"

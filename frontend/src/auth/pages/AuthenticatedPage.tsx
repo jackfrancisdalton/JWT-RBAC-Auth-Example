@@ -5,21 +5,24 @@ import { useAuth } from "../providers/AuthProvider";
 export default function AuthenticatedPage() {
     const { user, logout } = useAuth();
 
+    const BACKEND_PORT = import.meta.env.VITE_BACKEND_PORT;
+    const adminRoleCheckURL = `http://localhost:${BACKEND_PORT}/auth/adminRoleCheck`;
+    const userRoleCheckURL = `http://localhost:${BACKEND_PORT}/auth/adminRoleCheck`;
+
     return (
         <div>
             {user && (
                 <AuthenticationStateCard user={user}></AuthenticationStateCard>
             )}
-            {/* TODO: update to pass only the sub path, not the base URL */}
             <TestRolePermissions
                 title="Test if you're an admin"
                 roles={["admin"]}
-                targetUrl="http://localhost:3000/auth/adminRoleCheck"
+                targetUrl={adminRoleCheckURL}
             ></TestRolePermissions>
             <TestRolePermissions
                 title="Test if you're a user"
                 roles={["user"]}
-                targetUrl="http://localhost:3000/auth/userRoleCheck"
+                targetUrl={userRoleCheckURL}
             ></TestRolePermissions>
             <button onClick={() => logout()}>Logout</button>
         </div>
