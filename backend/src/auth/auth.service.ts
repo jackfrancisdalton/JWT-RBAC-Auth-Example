@@ -32,6 +32,7 @@ export class AuthService {
             password: await bcrypt.hash('password', 10), 
             roles: ['user'], 
             createdAt: new Date(),
+            authProvider: 'internal'
         })
 
         this.users.push({ 
@@ -40,6 +41,7 @@ export class AuthService {
             password: await bcrypt.hash('password', 10), 
             roles: ['user', 'admin'], 
             createdAt: new Date(),
+            authProvider: 'internal'
         })
     }
 
@@ -56,6 +58,7 @@ export class AuthService {
             password: hash, 
             roles: ['user'],
             createdAt: new Date(),
+            authProvider: 'internal'
         };
 
         this.users.push(user);
@@ -64,7 +67,9 @@ export class AuthService {
     }
 
     async login (email: string, password: string): Promise<string> {
-        const user = this.users.find(user => user.email === email);
+        const user = this.users
+            .filter(user => user.authProvider === 'internal') // we only allow login in this method for internal users, others will have to use other login methods like google login
+            .find(user => user.email === email);
 
         if(!user)
             throw new UserNotFoundError()
@@ -82,12 +87,12 @@ export class AuthService {
     
         if (!existingUser) {
             const newUserFromGoogle: User = { 
-                id: Date.now().toString(36) + Math.random().toString(36).slice(0, 2), 
+                id: user.id,
                 email: user.email, 
                 roles: ['user'], 
                 createdAt: new Date(),
                 password: '',
-                // TODO: add "user auth provider" to the user object to prevent login via non google method
+                authProvider: 'google'
             };
 
             this.users.push(newUserFromGoogle);

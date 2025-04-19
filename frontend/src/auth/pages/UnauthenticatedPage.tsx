@@ -1,3 +1,4 @@
+import GoogleLoginButton from "../components/GoogleLoginButton";
 import LoginForm from "../components/LoginForm";
 import RegistrationForm from "../components/RegistrationForm";
 
@@ -7,6 +8,8 @@ export default function UnauthenticatedPage() {
         <LoginForm></LoginForm>
         <br />
         <RegistrationForm></RegistrationForm>
+        <br />
+        <GoogleLoginButton></GoogleLoginButton>
     </div>
   )  
 }

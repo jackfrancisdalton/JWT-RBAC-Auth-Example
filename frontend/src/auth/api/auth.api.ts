@@ -20,6 +20,16 @@ const register = async (email: string, password: string): Promise<{ token: strin
     return await handleResponse(res);
 };
 
+const googleLogin = async (googleUser: any): Promise<{ token: string }> => {
+    const res = await fetch(`${AUTH_URL_BASE}/google/callback`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${googleUser.token}`,
+        },
+    });
+    return await handleResponse(res);
+};
+
 const handleResponse = async (res: Response): Promise<any> => {
     if (!res.ok) {
         const errorData = await res.json();
@@ -31,4 +41,5 @@ const handleResponse = async (res: Response): Promise<any> => {
 export const AuthApi = {
     login,
     register,
+    googleLogin
 };

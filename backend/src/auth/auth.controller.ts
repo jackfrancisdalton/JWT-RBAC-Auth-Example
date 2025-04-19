@@ -50,6 +50,7 @@ export class AuthController {
     @Get('google/callback')
     @UseGuards(AuthGuard('google'))
     async googleAuthRedirect(@Req() req) {
+        // We have a user on the req here because the callback in the react app passed a bearer and the auth guard attached the user based on this token as user
         return this.authService.googleLogin(req.user);
     }
 
