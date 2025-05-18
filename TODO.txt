@@ -1,0 +1,4 @@
+# Future Developments:
+- add google login auth
+- add twitter login auth
+- review naming and structure in project as it can likely be improved

@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #24242e;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 1. Your color scales as CSS custom properties */
+@theme {
+  /* Dark base scale */
+  --color-secondary-50:  #d8d8db;
+  --color-secondary-100: #c2c2c5;
+  --color-secondary-200: #ababb0;
+  --color-secondary-300: #94949c;
+  --color-secondary-400: #7c7c8a;
+  --color-secondary-500: #676772;
+  --color-secondary-600: #51515b;
+  --color-secondary-700: #3a3a45;
+  --color-secondary-800: #24242e;
+  --color-secondary-900: #0f0f1b; 
+
+  /* Pink primary scale */
+  --color-primary-50:  #fce4ec;
+  --color-primary-100: #f8bbd0;
+  --color-primary-200: #f48fb1;
+  --color-primary-300: #f06292;
+  --color-primary-400: #ec407a;
+  --color-primary-500: #e91e63;
+  --color-primary-600: #d81b60;
+  --color-primary-700: #c2185b;
+  --color-primary-800: #ad1457;
+  --color-primary-900: #880e4f;
+}

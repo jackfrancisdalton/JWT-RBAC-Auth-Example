@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile.prod
+    environment:
+      NODE_ENV: production
+    volumes: [] # Added to ensure no volume mounts
+
+  frontend:
+    build:
+      dockerfile: Dockerfile.prod
+    environment:
+      NODE_ENV: production
+    ports:
+      - "${FRONTEND_PORT}:80" # Ensure we use port 80 as prod will host on nginx instead of vite default
+    volumes: []  # Added to ensure no volume mounts in prod

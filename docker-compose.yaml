@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_TOKEN_EXPIRES_IN: ${JWT_ACCESS_TOKEN_EXPIRES_IN}
+      JWT_REFRESH_TOKEN_EXPIRES_IN: ${JWT_REFRESH_TOKEN_EXPIRES_IN}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+    ports:
+      - "${BACKEND_PORT}:3000"
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_BACKEND_PORT: ${BACKEND_PORT} # env variables in VITE must start with VITE_
