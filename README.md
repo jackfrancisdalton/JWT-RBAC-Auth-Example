@@ -1,6 +1,17 @@
 # Role Based Authentication with React and NestJS using JWT
 This is an example repository, intended to provide a simple implementation of JWT in a React + Nest application.
-As an example project all business logic and other complexity is kept to a bare minimum so readers can focus on the authentication flow  
+As an example project all business logic and other complexity is kept to a bare minimum so readers can focus on the authentication flow.
+In addition code is heavily commented to assist in understanding the approach and flow.  
+
+--------------
+
+# Screenshots
+
+![Login /Register Page](./readme-resources//login-register.png)
+
+![Dashboard](./readme-resources/home.png)
+
+![Route Blocking](./readme-resources//cannot-access.png)
 
 --------------
 
